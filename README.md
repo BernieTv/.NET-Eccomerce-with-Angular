@@ -1,39 +1,64 @@
-# Skinet Project Repository
+# 🛒 **E-Commerce Platform with .NET 8 & Angular** 🚀✨
 
-Welcome to the brand new version of the SkiNet app created for the Udemy training course available [here](https://www.udemy.com/course/learn-to-build-an-e-commerce-app-with-net-core-and-angular).
+This document provides an overview of our modern, full-featured **e-commerce application** built using **.NET 8** for the backend and **Angular** for the frontend. It delivers a seamless shopping experience with **real-time updates**, **responsive design**, and **secure payment integration**. 💻📱
 
-This has been rewritten from scratch to take advantage of and to make it (hopefully) a bit more futureproof. This app is built using .Net 8 and Angular 18
+---
 
-# Running the project
+## 🚀 **Technology Stack Overview** 🛠️
 
-You can see a live demo of this project [here](https://skinet-course.azurewebsites.net/).
+- ⚙️ **Backend:** ASP.NET Core 8
+- 🌐 **Frontend:** Angular
+- 🔄 **Real-time Communication:** SignalR
+- 🎨 **Styling:** Tailwind CSS
+- 💳 **Payment Integration:** Stripe API
 
-You can also run this app locally. To run this project locally you will need to have installed:
+---
 
-1. Docker
-2. .Net SDK v8
-3. NodeJS (at least version 20.11.1) - Optional if you want to run the Angular app separately in development mode
-4. Clone the project in a User folder on your computer by running:
+## 🎯 **Key Features Overview** 🌟
+
+- 🛍️ **Product Management:** Browse, search, and filter products effortlessly.
+- 🔄 **Real-time Updates:** Instant updates on orders and notifications via SignalR.
+- 💳 **Secure Payments:** Stripe integration for seamless and secure transactions.
+- 🔐 **Authentication & Authorization:** Secure user authentication and role-based access.
+- 📊 **Order Tracking:** Real-time order status and tracking updates.
+
+---
+
+## 🛠️ **Setup Instructions** 📝
+
+To run this application locally, please follow the steps below:
+
+### **🧰 Prerequisites** ⚡
+
+Ensure you have the following installed:
+
+1. 🐳 **Docker**
+2. 🛠️ **.NET SDK v8**
+3. 📦 **NodeJS (v20.11.1 or later)** _(Optional for Angular dev mode)_
+
+### **📥 Step 1: Clone the Repository** 🗂️
 
 ```bash
-# you will of course need git installed to run this
-git clone https://github.com/TryCatchLearn/skinet-2024.git
-cd skinet-2024
+git clone https://github.com/BernieTv/.NET-Eccomerce-with-Angular
+cd .NET-Eccomerce-with-Angular
 ```
 
-5. Restore the packages by running:
+### **📦 Step 2: Restore Dependencies** 🔄
 
 ```bash
-# From the solution folder (skinet-2024)
-dotnet restore
+# From the solution folder
+ dotnet restore
 
-# Change directory to client to run the npm install.  Only necessary if you want to run
-# the angular app in development mode using the angular dev server
+# Navigate to the Angular client folder
 cd client
 npm install
 ```
 
-6. Most of the functionality will work without Stripe but if you wish to see the payment functionality working too then you will need to create a Stripe account and populate the keys from Stripe. In the API folder create a file called ‘appsettings.json’ with the following code:
+### **💳 Step 3: Stripe Configuration** 🔑
+
+To enable payment functionality, set up your **Stripe keys**:
+
+1. Create an `appsettings.json` file in the **API folder**:
 
 ```json
 {
@@ -52,51 +77,58 @@ npm install
 }
 ```
 
-7. To use the Stripe webhook you will also need to use the StripeCLI, and when you run this you will be given a whsec key which you will need to add to the appsettings.json. To get this key and instructions on how to install the Stripe CLI you can go to your Stripe dashboad ⇒ Developers ⇒ Webhooks ⇒ Add local listener. The whsec key will be visible in the terminal when you run Stripe.
-8. Once you have the Stripe CLI you can then run this so it listens to stripe events and forward them to the .Net API:
+2. Set up **Stripe CLI** for local webhook forwarding:
 
 ```bash
-#login to stripe
 stripe login
-
-# listen to stripe events and forward them to the API
 stripe listen --forward-to https://localhost:5001/api/payments/webhook -e payment_intent.succeeded
 ```
 
-9. The app uses both Sql Server and Redis. To start these services then you need to run this command from the solution folder. These are both configured to run on their default ports so ensure you do not have a conflicting DB server running on either port 1433 or port 6379 on your computer:
+### **🐘 Step 4: Start Database Services** 🗄️
+
+The app requires **SQL Server** and **Redis**. Start these services using **Docker**:
 
 ```bash
-# in the skinet-2024 folder (root directory of the app)
 docker compose up -d
 ```
 
-10. You can then run the app and browse to it locally by running:
+Ensure no conflicting services are running on **port 1433** (SQL Server) or **port 6379** (Redis).
+
+### **🚦 Step 5: Start the Application** ▶️
+
+Run the **backend API**:
 
 ```bash
-# run this from the API folder
 cd API
 dotnet run
 ```
 
-11. You can then browse to the app on https://localhost:5001
-12. If you wish to run the Angular app in development mode you will need to install a self signed SSL certificate. The client app is using an SSL certificate generated by mkcert. To allow this to work on your computer you will need to first install mkcert using the instructions provided in its repo [here](https://github.com/FiloSottile/mkcert), then run the following command:
+Access the app locally: 🌍 [https://localhost:5001](https://localhost:5001)
+
+### **💻 Step 6: Run Angular Frontend in Development Mode** 🖥️
+
+To enable **development mode with SSL**:
 
 ```bash
-# cd into the client ssl folder
 cd client/ssl
 mkcert localhost
 ```
 
-13. You can then run both the .Net app and the client app.
+Start **Angular Dev Server**:
 
 ```bash
-# terminal tab 1
-cd API
-dotnet run
-
-# terminal tab 2
+cd client
 ng serve
 ```
 
-14. Then browse to [https://localhost:4200](https://localhost:4200)
-15. You can use the Stripe test cards available from [here](https://docs.stripe.com/testing#cards) to pay for the orders.
+Browse to: 🌐 [https://localhost:4200](https://localhost:4200)
+
+### **🛡️ Step 7: Test Payments** 💵
+
+Use **Stripe test cards** available [here](https://docs.stripe.com/testing#cards) for payment simulation.
+
+---
+
+## 📄 **License** 📜
+
+This project is licensed under the **MIT License**. 📝
