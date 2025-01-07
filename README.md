@@ -18,7 +18,7 @@ This document provides an overview of our modern, full-featured **e-commerce app
 
 - 🛍️ **Product Management:** Browse, search, and filter products effortlessly.
 - 🔄 **Real-time Updates:** Instant updates on orders and notifications via SignalR.
-- 💳 **Secure Payments:** Stripe integration for seamless and secure transactions (refunds and coupon codes included).
+- 💳 **Secure Payments:** Stripe integration for seamless and secure transactions. Refunds and coupon codes included.
 - 🔐 **Authentication & Authorization:** Secure user authentication and role-based access.
 - 📊 **Order Tracking:** Admin dashboard for real-time order status and tracking updates.
 
