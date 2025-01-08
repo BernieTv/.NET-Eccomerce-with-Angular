@@ -11,6 +11,7 @@ This document provides an overview of our modern, full-featured **e-commerce app
 - 🔄 **Real-time Communication:** SignalR
 - 🎨 **Styling:** Tailwind CSS
 - 💳 **Payment Integration:** Stripe API
+- 🗂️ **Caching & Data Storage:** Redis
 
 ---
 
@@ -21,6 +22,8 @@ This document provides an overview of our modern, full-featured **e-commerce app
 - 💳 **Secure Payments:** Stripe integration for seamless and secure transactions. Refunds and coupon codes included.
 - 🔐 **Authentication & Authorization:** Secure user authentication and role-based access.
 - 📊 **Order Tracking:** Admin dashboard for real-time order status and tracking updates.
+- 🗂️ **User Cart Management:** Redis is used to store user cart data efficiently.
+- ⚡ **Request Caching:** Redis caches frequent requests to improve performance and reduce server load.
 
 ---
 
