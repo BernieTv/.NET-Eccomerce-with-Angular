@@ -1,4 +1,4 @@
-# 🛒 **E-Commerce Platform with .NET 8 & Angular** 🚀✨
+# 🛒 **E-Commerce Platform with .NET 9 & Angular 20** 🚀✨
 
 This document provides an overview of our modern, full-featured **e-commerce application** built using **.NET 9** for the backend and **Angular 20** for the frontend. It delivers a seamless shopping experience with **real-time updates**, **responsive design**, and **secure payment integration**. 💻📱
 
