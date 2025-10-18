@@ -9,10 +9,10 @@ import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product-item',
-  standalone: true,
   imports: [
     MatCard,
     MatCardContent,
+    MatCardActions,
     MatCardActions,
     MatIcon,
     CurrencyPipe,
@@ -23,6 +23,6 @@ import { CartService } from '../../../core/services/cart.service';
   styleUrl: './product-item.component.scss'
 })
 export class ProductItemComponent {
-  @Input() product?: Product;
-  cartService = inject(CartService);
+ @Input() product?: Product;
+ cartService = inject(CartService)
 }

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+using System;
+using System.Reflection;
 using System.Text.Json;
 using Core.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +15,7 @@ public class StoreContextSeed
             var user = new AppUser
             {
                 UserName = "admin@test.com",
-                Email = "admin@test.com",
+                Email = "admin@test.com"
             };
 
             await userManager.CreateAsync(user, "Pa$$w0rd");
@@ -25,9 +26,7 @@ public class StoreContextSeed
 
         if (!context.Products.Any())
         {
-            var productsData = await File
-                .ReadAllTextAsync(path + @"/Data/SeedData/products.json");
-
+            var productsData = await File.ReadAllTextAsync(path + @"/Data/SeedData/products.json");
             var products = JsonSerializer.Deserialize<List<Product>>(productsData);
 
             if (products == null) return;
@@ -39,9 +38,7 @@ public class StoreContextSeed
 
         if (!context.DeliveryMethods.Any())
         {
-            var dmData = await File
-                .ReadAllTextAsync(path + @"/Data/SeedData/delivery.json");
-
+            var dmData = await File.ReadAllTextAsync(path + @"/Data/SeedData/delivery.json");
             var methods = JsonSerializer.Deserialize<List<DeliveryMethod>>(dmData);
 
             if (methods == null) return;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+using System;
+using System.Collections.Concurrent;
 using API.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -14,7 +15,8 @@ public class NotificationHub : Hub
     {
         var email = Context.User?.GetEmail();
 
-        if (!string.IsNullOrEmpty(email)) UserConnections[email] = Context.ConnectionId;
+        if (!string.IsNullOrEmpty(email))
+            UserConnections[email] = Context.ConnectionId;
 
         return base.OnConnectedAsync();
     }
@@ -23,7 +25,8 @@ public class NotificationHub : Hub
     {
         var email = Context.User?.GetEmail();
 
-        if (!string.IsNullOrEmpty(email)) UserConnections.TryRemove(email, out _);
+        if (!string.IsNullOrEmpty(email))
+            UserConnections.TryRemove(email, out _);
 
         return base.OnDisconnectedAsync(exception);
     }

@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+using System;
+using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,24 +14,18 @@ public class CartController(ICartService cartService) : BaseApiController
 
         return Ok(cart ?? new ShoppingCart{Id = id});
     }
-
+    
     [HttpPost]
     public async Task<ActionResult<ShoppingCart>> UpdateCart(ShoppingCart cart)
     {
         var updatedCart = await cartService.SetCartAsync(cart);
 
-        if (updatedCart == null) return BadRequest("Problem with cart");
-
-        return updatedCart;
+        return Ok(updatedCart);
     }
-
+    
     [HttpDelete]
-    public async Task<ActionResult> DeleteCart(string id)
+    public async Task DeleteCart(string id)
     {
-        var result = await cartService.DeleteCartAsync(id);
-
-        if (!result) return BadRequest("Problem deleting cart");
-
-        return Ok();
+        await cartService.DeleteCartAsync(id);
     }
 }

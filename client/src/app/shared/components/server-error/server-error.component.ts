@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-server-error',
-  standalone: true,
   imports: [
     MatCard
   ],

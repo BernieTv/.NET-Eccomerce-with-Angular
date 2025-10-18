@@ -1,4 +1,5 @@
-﻿using API.DTOs;
+using System;
+using API.DTOs;
 using Core.Entities;
 
 namespace API.Extensions;
@@ -16,7 +17,7 @@ public static class AddressMappingExtensions
             City = address.City,
             State = address.State,
             Country = address.Country,
-            PostalCode = address.PostalCode,
+            PostalCode = address.PostalCode
         };
     }
 
@@ -31,7 +32,7 @@ public static class AddressMappingExtensions
             City = addressDto.City,
             State = addressDto.State,
             Country = addressDto.Country,
-            PostalCode = addressDto.PostalCode,
+            PostalCode = addressDto.PostalCode
         };
     }
 

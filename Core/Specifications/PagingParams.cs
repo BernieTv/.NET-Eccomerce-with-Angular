@@ -1,4 +1,6 @@
-﻿namespace Core.Specifications;
+using System;
+
+namespace Core.Specifications;
 
 public class PagingParams
 {
@@ -11,5 +13,4 @@ public class PagingParams
         get => _pageSize;
         set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
     }
-    
 }

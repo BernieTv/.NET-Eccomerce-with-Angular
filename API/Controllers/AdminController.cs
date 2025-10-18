@@ -1,4 +1,5 @@
-﻿using API.DTOs;
+using System;
+using API.DTOs;
 using API.Extensions;
 using Core.Entities.OrderAggregate;
 using Core.Interfaces;
@@ -12,22 +13,22 @@ namespace API.Controllers;
 public class AdminController(IUnitOfWork unit, IPaymentService paymentService) : BaseApiController
 {
     [HttpGet("orders")]
-    public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetOrders([FromQuery]OrderSpecParams specParams)
+    public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetOrders([FromQuery] OrderSpecParams specParams)
     {
         var spec = new OrderSpecification(specParams);
 
-        return await CreatePagedResult(unit.Repository<Order>(), spec, specParams.PageIndex, 
-            specParams.PageSize, o => o.ToDto());
+        return await CreatePagedResult(unit.Repository<Order>(),
+            spec, specParams.PageIndex, specParams.PageSize, o => o.ToDto());
     }
 
     [HttpGet("orders/{id:int}")]
     public async Task<ActionResult<OrderDto>> GetOrderById(int id)
     {
         var spec = new OrderSpecification(id);
-        
+
         var order = await unit.Repository<Order>().GetEntityWithSpec(spec);
 
-        if (order == null) return BadRequest("No order with that id");
+        if (order == null) return BadRequest("No order with that Id");
 
         return order.ToDto();
     }
@@ -39,7 +40,7 @@ public class AdminController(IUnitOfWork unit, IPaymentService paymentService) :
 
         var order = await unit.Repository<Order>().GetEntityWithSpec(spec);
 
-        if (order == null) return BadRequest("No order with that id");
+        if (order == null) return BadRequest("No order with that Id");
 
         if (order.Status == OrderStatus.Pending)
             return BadRequest("Payment not received for this order");

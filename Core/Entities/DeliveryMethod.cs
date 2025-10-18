@@ -1,4 +1,6 @@
-﻿namespace Core.Entities;
+using System;
+
+namespace Core.Entities;
 
 public class DeliveryMethod : BaseEntity
 {

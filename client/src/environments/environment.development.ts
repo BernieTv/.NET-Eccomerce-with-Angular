@@ -1,7 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:5001/api/',
+  baseUrl: 'https://localhost:5001/api/',
   hubUrl: 'https://localhost:5001/hub/notifications',
-  stripePublicKey:
-    'pk_test_51QeCyMIEz8ywySUG81G27K7GGSQlXhtk1COWbftsKpCPBzwnzqSjFBoHKUPrwcE7HgrLbSSNagnr2KDrUvVHrrhQ00IwnD8CfZ',
+  stripePublicKey: 'pk_test_51RfWtp2eeLkqjJn6O3xoMRVY9wkRB9a2UZCvR1EMZPrJhpkjsWpFgC8wjG2HrfCQbd4Jz0Le2E4bB1jXgem7qtn100sWRZt0Sh'
 };

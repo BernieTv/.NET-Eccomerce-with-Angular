@@ -11,7 +11,7 @@ export class BusyService {
     this.busyRequestCount++;
     this.loading = true;
   }
-
+  
   idle() {
     this.busyRequestCount--;
     if (this.busyRequestCount <= 0) {

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+using System;
+using System.Text.Json;
 using Core.Interfaces;
 using StackExchange.Redis;
 
@@ -6,10 +7,12 @@ namespace Infrastructure.Services;
 
 public class ResponseCacheService(IConnectionMultiplexer redis) : IResponseCacheService
 {
-    private readonly IDatabase _database = redis.GetDatabase(1);
+    private readonly IDatabase _database = redis.GetDatabase(1); // to use something other than default. 
 
     public async Task CacheResponseAsync(string cacheKey, object response, TimeSpan timeToLive)
     {
+        if (response == null) return;
+
         var options = new JsonSerializerOptions{PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
 
         var serializedResponse = JsonSerializer.Serialize(response, options);

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System;
+using System.ComponentModel.DataAnnotations;
 using Core.Entities.OrderAggregate;
 
 namespace API.DTOs;

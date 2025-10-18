@@ -1,14 +1,17 @@
-﻿namespace Core.Specifications;
+using System;
+
+namespace Core.Specifications;
 
 public class ProductSpecParams : PagingParams
 {
+
     private List<string> _brands = [];
     public List<string> Brands
     {
         get => _brands;
         set
         {
-            _brands = value.SelectMany(x => x.Split(',',
+            _brands = value.SelectMany(b => b.Split(',',
                 StringSplitOptions.RemoveEmptyEntries)).ToList();
         }
     }
@@ -19,19 +22,16 @@ public class ProductSpecParams : PagingParams
         get => _types;
         set
         {
-            _types = value.SelectMany(x => x.Split(',',
+            _types = value.SelectMany(b => b.Split(',',
                 StringSplitOptions.RemoveEmptyEntries)).ToList();
         }
     }
-
     public string? Sort { get; set; }
-
+    
     private string? _search;
     public string Search
     {
         get => _search ?? "";
         set => _search = value.ToLower();
     }
-    
-
 }

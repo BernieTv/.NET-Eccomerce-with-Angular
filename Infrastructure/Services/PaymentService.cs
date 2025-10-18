@@ -1,4 +1,4 @@
-﻿using Core.Entities;
+using Core.Entities;
 using Core.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Stripe;
@@ -13,9 +13,9 @@ public class PaymentService : IPaymentService
     public PaymentService(IConfiguration config, ICartService cartService,
         IUnitOfWork unit)
     {
+        StripeConfiguration.ApiKey = config["StripeSettings:SecretKey"];
         this.cartService = cartService;
         this.unit = unit;
-        StripeConfiguration.ApiKey = config["StripeSettings:SecretKey"];
     }
 
     public async Task<ShoppingCart?> CreateOrUpdatePaymentIntent(string cartId)
@@ -42,7 +42,7 @@ public class PaymentService : IPaymentService
 
         return cart;
     }
-
+    
     public async Task<string> RefundPayment(string paymentIntentId)
     {
         var refundOptions = new RefundCreateOptions
@@ -56,7 +56,8 @@ public class PaymentService : IPaymentService
         return result.Status;
     }
 
-    private async Task CreateUpdatePaymentIntentAsync(ShoppingCart cart, long total)
+    private async Task CreateUpdatePaymentIntentAsync(ShoppingCart cart,
+        long total)
     {
         var service = new PaymentIntentService();
 
@@ -82,7 +83,8 @@ public class PaymentService : IPaymentService
         }
     }
 
-    private async Task<long> ApplyDiscountAsync(AppCoupon appCoupon, long amount)
+    private async Task<long> ApplyDiscountAsync(AppCoupon appCoupon, 
+	    long amount)
     {
         var couponService = new Stripe.CouponService();
 
@@ -113,7 +115,8 @@ public class PaymentService : IPaymentService
         foreach (var item in cart.Items)
         {
             var productItem = await unit.Repository<Core.Entities.Product>()
-                .GetByIdAsync(item.ProductId) ?? throw new Exception("Problem getting product in cart");
+                .GetByIdAsync(item.ProductId) 
+	                ?? throw new Exception("Problem getting product in cart");
 
             if (item.Price != productItem.Price)
             {

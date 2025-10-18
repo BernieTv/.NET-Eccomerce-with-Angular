@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+using System;
+using System.Linq.Expressions;
 using Core.Interfaces;
 
 namespace Core.Specifications;
@@ -12,18 +13,13 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
     public Expression<Func<T, object>>? OrderBy { get; private set; }
 
     public Expression<Func<T, object>>? OrderByDescending { get; private set; }
+    public List<Expression<Func<T, object>>> Includes { get; } = [];
+    public List<string> IncludeStrings { get; } = []; // For ThenInclude
 
     public bool IsDistinct { get; private set; }
-
     public int Take { get; private set; }
-
     public int Skip { get; private set; }
-
     public bool IsPagingEnabled { get; private set; }
-
-    public List<Expression<Func<T, object>>> Includes { get; } = [];
-
-    public List<string> IncludeStrings { get; } = [];
 
     public IQueryable<T> ApplyCriteria(IQueryable<T> query)
     {
@@ -35,9 +31,9 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
         return query;
     }
 
-    protected void AddInclude(Expression<Func<T, object>> includeExpressions)
+    protected void AddInclude(Expression<Func<T, object>> includeExpression)
     {
-        Includes.Add(includeExpressions);
+        Includes.Add(includeExpression);
     }
 
     protected void AddInclude(string includeString)
@@ -47,12 +43,12 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
 
     protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
     {
-        OrderBy = orderByExpression;
+        OrderBy = orderByExpression ?? throw new ArgumentNullException(nameof(orderByExpression));
     }
 
     protected void AddOrderByDescending(Expression<Func<T, object>> orderByDescExpression)
     {
-        OrderByDescending = orderByDescExpression;
+        OrderByDescending = orderByDescExpression ?? throw new ArgumentNullException(nameof(orderByDescExpression));
     }
 
     protected void ApplyDistinct()

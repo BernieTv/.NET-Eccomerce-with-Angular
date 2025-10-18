@@ -26,7 +26,7 @@ export class SignalrService {
       this.orderSignal.set(order)
     })
   }
-  
+
   stopHubConnection() {
     if (this.hubConnection?.state === HubConnectionState.Connected) {
       this.hubConnection.stop().catch(error => console.log(error))

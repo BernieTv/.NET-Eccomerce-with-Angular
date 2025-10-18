@@ -1,4 +1,4 @@
-﻿using API.RequestHelpers;
+using API.RequestHelpers;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
@@ -9,18 +9,18 @@ namespace API.Controllers;
 
 public class ProductsController(IUnitOfWork unit) : BaseApiController
 {
-    [Cache(600)]
+    [Cached(100000)]
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(
-        [FromQuery]ProductSpecParams specParams)
+    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery]ProductSpecParams productParams)
     {
-        var spec = new ProductSpecification(specParams);
+        var spec = new ProductSpecification(productParams);
 
-        return await CreatePagedResult(unit.Repository<Product>(), spec, specParams.PageIndex, specParams.PageSize);
+        return await CreatePagedResult(unit.Repository<Product>(), spec,
+            productParams.PageIndex, productParams.PageSize);
     }
 
-    [Cache(600)]
-    [HttpGet("{id:int}")] // api/products/2
+    [Cached(100000)]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
         var product = await unit.Repository<Product>().GetByIdAsync(id);
@@ -40,33 +40,32 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         if (await unit.Complete())
         {
             return CreatedAtAction("GetProduct", new { id = product.Id }, product);
-        }
+        };
 
         return BadRequest("Problem creating product");
     }
 
     [InvalidateCache("api/products|")]
     [Authorize(Roles = "Admin")]
-    [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateProduct(int id, Product product)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateProduct(int id, Product product)
     {
-        if (product.Id != id || !ProductExists(id))
-            return BadRequest("Cannot update this product");
+        if (id != product.Id || !ProductExists(id)) return BadRequest("Cannot update this product");
 
         unit.Repository<Product>().Update(product);
 
         if (await unit.Complete())
         {
             return NoContent();
-        }
+        };
 
         return BadRequest("Problem updating the product");
     }
 
     [InvalidateCache("api/products|")]
     [Authorize(Roles = "Admin")]
-    [HttpDelete("{id:int}")]
-    public async Task<ActionResult> DeleteProduct(int id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProduct(int id)
     {
         var product = await unit.Repository<Product>().GetByIdAsync(id);
 
@@ -77,12 +76,12 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         if (await unit.Complete())
         {
             return NoContent();
-        }
+        };
 
         return BadRequest("Problem deleting the product");
     }
 
-    [Cache(10000)]
+    [Cached(100000)]
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
@@ -90,8 +89,8 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
 
         return Ok(await unit.Repository<Product>().ListAsync(spec));
     }
-
-    [Cache(10000)]
+    
+    [Cached(100000)]
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
@@ -99,7 +98,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
 
         return Ok(await unit.Repository<Product>().ListAsync(spec));
     }
-
+    
     private bool ProductExists(int id)
     {
         return unit.Repository<Product>().Exists(id);

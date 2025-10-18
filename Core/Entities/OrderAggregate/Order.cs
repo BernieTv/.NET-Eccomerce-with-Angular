@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+using System;
+using Core.Interfaces;
 
 namespace Core.Entities.OrderAggregate;
 
@@ -15,7 +16,7 @@ public class Order : BaseEntity, IDtoConvertible
     public OrderStatus Status { get; set; } = OrderStatus.Pending;
     public required string PaymentIntentId { get; set; }
 
-    public decimal GetTotal()
+    public decimal GetTotal() 
     {
         return Subtotal - Discount + DeliveryMethod.Price;
     }

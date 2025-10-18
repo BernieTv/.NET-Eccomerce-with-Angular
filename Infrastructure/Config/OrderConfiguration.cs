@@ -1,4 +1,4 @@
-﻿using Core.Entities.OrderAggregate;
+using Core.Entities.OrderAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,8 +18,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(x => x.Discount).HasColumnType("decimal(18,2)");
         builder.HasMany(x => x.OrderItems).WithOne().OnDelete(DeleteBehavior.Cascade);
         builder.Property(x => x.OrderDate).HasConversion(
-            d => d.ToUniversalTime(),
-            d => DateTime.SpecifyKind(d, DateTimeKind.Utc)
+            x => x.ToUniversalTime(),
+            x => DateTime.SpecifyKind(x, DateTimeKind.Utc)
         );
     }
 }

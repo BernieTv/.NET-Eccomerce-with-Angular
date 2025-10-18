@@ -1,19 +1,18 @@
 import { Component, inject } from '@angular/core';
-import { MatBadge } from '@angular/material/badge';
-import { MatButton } from '@angular/material/button';
-import {MatIcon} from '@angular/material/icon';
+import { MatIcon } from "@angular/material/icon";
+import { MatButton } from "@angular/material/button";
+import { MatBadge } from "@angular/material/badge";
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { MatProgressBar } from "@angular/material/progress-bar";
 import { BusyService } from '../../core/services/busy.service';
-import { MatProgressBar } from '@angular/material/progress-bar';
 import { CartService } from '../../core/services/cart.service';
 import { AccountService } from '../../core/services/account.service';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatDivider } from '@angular/material/divider';
-import { IsAdminDirective } from '../../shared/directives/is-admin.directive';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { IsAdmin } from '../../shared/directives/is-admin';
 
 @Component({
   selector: 'app-header',
-  standalone: true,
   imports: [
     MatIcon,
     MatButton,
@@ -25,7 +24,7 @@ import { IsAdminDirective } from '../../shared/directives/is-admin.directive';
     MatMenu,
     MatDivider,
     MatMenuItem,
-    IsAdminDirective
+    IsAdmin 
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -42,6 +41,6 @@ export class HeaderComponent {
         this.accountService.currentUser.set(null);
         this.router.navigateByUrl('/');
       }
-    })
+    });
   }
 }

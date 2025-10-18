@@ -5,12 +5,15 @@
         </div>
         <mat-form-field appearance="outline" class="w-full mb-4">
             <mat-label>Email address</mat-label>
-            <input formControlName="email" type="email" placeholder="name@example.com" matInput />
+            <input matInput formControlName="email" type="email"
+                placeholder="name@example.com" />
         </mat-form-field>
-        <mat-form-field appearance="outline" class="w-full mb-4">
+        <mat-form-field appearance="outline" class="w-full mb-6">
             <mat-label>Password</mat-label>
-            <input formControlName="password" type="password" placeholder="Password" matInput />
+            <input matInput formControlName="password" type="password"
+                placeholder="Password" />
         </mat-form-field>
-        <button mat-flat-button type="submit" class="w-full py-2">Sign in</button>
+        <button mat-flat-button type="submit" color="primary"
+            class="w-full py-2">Sign in</button>
     </form>
 </mat-card>

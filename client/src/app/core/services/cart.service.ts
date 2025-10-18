@@ -10,11 +10,11 @@ import { DeliveryMethod } from '../../shared/models/deliveryMethod';
   providedIn: 'root'
 })
 export class CartService {
-  baseUrl = environment.apiUrl;
-  private http = inject(HttpClient);
+  baseUrl = environment.baseUrl;
+  private http = inject(HttpClient)
   cart = signal<Cart | null>(null);
   itemCount = computed(() => {
-    return this.cart()?.items.reduce((sum, item) => sum + item.quantity, 0)
+    return this.cart()?.items.reduce((sum, item) => sum + item.quantity, 0);
   });
   selectedDelivery = signal<DeliveryMethod | null>(null);
   totals = computed(() => {
@@ -23,26 +23,33 @@ export class CartService {
 
     if (!cart) return null;
     const subtotal = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    
+
     let discountValue = 0;
 
     if (cart.coupon) {
+      console.log(cart)
       if (cart.coupon.amountOff) {
         discountValue = cart.coupon.amountOff;
       } else if (cart.coupon.percentOff) {
         discountValue = subtotal * (cart.coupon.percentOff / 100);
       }
     }
-    
+
     const shipping = delivery ? delivery.price : 0;
+
+    const total = subtotal + shipping - discountValue
 
     return {
       subtotal,
       shipping,
       discount: discountValue,
-      total: subtotal + shipping - discountValue
-    }
+      total
+    };
   })
+
+  applyDiscount(code: string) {
+    return this.http.get<Coupon>(this.baseUrl + 'coupons/' + code);
+  }
 
   getCart(id: string) {
     return this.http.get<Cart>(this.baseUrl + 'cart?id=' + id).pipe(
@@ -61,10 +68,6 @@ export class CartService {
     )
   }
 
-  applyDiscount(code: string) {
-    return this.http.get<Coupon>(this.baseUrl + 'coupons/' + code);
-  }
-
   async addItemToCart(item: CartItem | Product, quantity = 1) {
     const cart = this.cart() ?? this.createCart();
     if (this.isProduct(item)) {
@@ -74,10 +77,10 @@ export class CartService {
     await firstValueFrom(this.setCart(cart));
   }
 
-async removeItemFromCart(productId: number, quantity = 1) {
+  async removeItemFromCart(productId: number, quantity = 1) {
     const cart = this.cart();
     if (!cart) return;
-    const index = cart.items.findIndex(x => x.productId === productId);
+    const index = cart.items.findIndex(i => i.productId === productId);
     if (index !== -1) {
       if (cart.items[index].quantity > quantity) {
         cart.items[index].quantity -= quantity;
@@ -93,45 +96,44 @@ async removeItemFromCart(productId: number, quantity = 1) {
   }
 
   deleteCart() {
-    this.http.delete(this.baseUrl  + 'cart?id=' + this.cart()?.id).subscribe({
+    this.http.delete(this.baseUrl + 'cart?id=' + this.cart()?.id).subscribe({
       next: () => {
         localStorage.removeItem('cart_id');
         this.cart.set(null);
       }
-    })
+    });
   }
 
-  private addOrUpdateItem(items: CartItem[], item: CartItem, quantity: number): CartItem[] {
-    const index = items.findIndex(x => x.productId === item.productId);
+  private addOrUpdateItem(items: CartItem[], item: CartItem, quantity: number) {
+    const index = items.findIndex(i => i.productId === item.productId);
     if (index === -1) {
       item.quantity = quantity;
       items.push(item);
     } else {
-      items[index].quantity += quantity
+      items[index].quantity += quantity;
     }
     return items;
   }
 
-  private mapProductToCartItem(item: Product): CartItem {
+  private mapProductToCartItem(product: Product): CartItem {
     return {
-      productId: item.id,
-      productName: item.name,
-      price: item.price,
+      productId: product.id,
+      productName: product.name,
+      price: product.price,
       quantity: 0,
-      pictureUrl: item.pictureUrl,
-      brand: item.brand,
-      type: item.type
-    }
+      pictureUrl: product.pictureUrl,
+      brand: product.brand,
+      type: product.type
+    };
   }
 
   private isProduct(item: CartItem | Product): item is Product {
     return (item as Product).id !== undefined;
   }
 
-  private createCart(): Cart {
+  private createCart() {
     const cart = new Cart();
     localStorage.setItem('cart_id', cart.id);
     return cart;
   }
-
 }

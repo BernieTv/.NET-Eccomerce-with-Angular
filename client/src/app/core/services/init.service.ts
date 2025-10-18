@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { CartService } from './cart.service';
 import { forkJoin, of, tap } from 'rxjs';
+import { CartService } from './cart.service';
 import { AccountService } from './account.service';
 import { SignalrService } from './signalr.service';
 
@@ -20,11 +20,9 @@ export class InitService {
       cart: cart$,
       user: this.accountService.getUserInfo().pipe(
         tap(user => {
-          if (user) this.signalrService.createHubConnection();
+          if (user) this.signalrService.createHubConnection()
         })
       )
     })
   }
-
-
 }

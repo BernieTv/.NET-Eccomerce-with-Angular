@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using API.DTOs;
 using API.Extensions;
 using Core.Entities;
@@ -41,7 +41,6 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     public async Task<ActionResult> Logout()
     {
         await signInManager.SignOutAsync();
-
         return NoContent();
     }
 
@@ -65,9 +64,12 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     [HttpGet("auth-status")]
     public ActionResult GetAuthState()
     {
-        return Ok(new { IsAuthenticated = User.Identity?.IsAuthenticated ?? false });
+        return Ok(new
+        {
+            IsAuthenticated = User.Identity?.IsAuthenticated ?? false
+        });
     }
-
+    
     [Authorize]
     [HttpPost("address")]
     public async Task<ActionResult<Address>> CreateOrUpdateAddress(AddressDto addressDto)
@@ -78,7 +80,7 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
         {
             user.Address = addressDto.ToEntity();
         }
-        else 
+        else
         {
             user.Address.UpdateFromDto(addressDto);
         }
@@ -88,21 +90,5 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
         if (!result.Succeeded) return BadRequest("Problem updating user address");
 
         return Ok(user.Address.ToDto());
-    }
-
-    [Authorize]
-    [HttpPost("reset-password")]
-    public async Task<ActionResult> ResetPassword(string currentPassword, string newPassword)
-    {
-        var user = await signInManager.UserManager.GetUserByEmail(User);
-
-        var result = await signInManager.UserManager.ChangePasswordAsync(user, currentPassword, newPassword);
-
-        if (result.Succeeded)
-        {
-            return Ok("Password updated");
-        } 
-
-        return BadRequest("Failed to update password");
     }
 }

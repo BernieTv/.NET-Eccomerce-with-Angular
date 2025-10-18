@@ -1,4 +1,5 @@
-﻿using API.Extensions;
+using System;
+using API.Extensions;
 using API.SignalR;
 using Core.Entities;
 using Core.Entities.OrderAggregate;
@@ -12,18 +13,20 @@ using Stripe;
 namespace API.Controllers;
 
 public class PaymentsController(IPaymentService paymentService,
-    IUnitOfWork unit, ILogger<PaymentsController> logger,
-    IConfiguration config, IHubContext<NotificationHub> hubContext) : BaseApiController
+    IUnitOfWork unit,
+    IHubContext<NotificationHub> hubContext,
+    ILogger<PaymentsController> logger,
+    IConfiguration config) : BaseApiController
 {
     private readonly string _whSecret = config["StripeSettings:WhSecret"]!;
 
     [Authorize]
     [HttpPost("{cartId}")]
-    public async Task<ActionResult<ShoppingCart>> CreateOrUpdatePaymentIntent(string cartId)
+    public async Task<ActionResult> CreateOrUpdatePaymentIntent(string cartId)
     {
         var cart = await paymentService.CreateOrUpdatePaymentIntent(cartId);
 
-        if (cart == null) return BadRequest("Problem with your cart");
+        if (cart == null) return BadRequest("Problem with your cart on the API");
 
         return Ok(cart);
     }
@@ -45,7 +48,7 @@ public class PaymentsController(IPaymentService paymentService,
 
             if (stripeEvent.Data.Object is not PaymentIntent intent)
             {
-                return BadRequest("Invalid event data");
+                return BadRequest("Invalid event data.");
             }
 
             await HandlePaymentIntentSucceeded(intent);
@@ -64,6 +67,19 @@ public class PaymentsController(IPaymentService paymentService,
         }
     }
 
+    private Event ConstructStripeEvent(string json)
+    {
+        try
+        {
+            return EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], _whSecret);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to construct Stripe event");
+            throw new StripeException("Invalid signature");
+        }
+    }
+
     private async Task HandlePaymentIntentSucceeded(PaymentIntent intent)
     {
         if (intent.Status == "succeeded")
@@ -71,10 +87,10 @@ public class PaymentsController(IPaymentService paymentService,
             var spec = new OrderSpecification(intent.Id, true);
 
             var order = await unit.Repository<Order>().GetEntityWithSpec(spec)
-                ?? throw new Exception("Order not found");
+                        ?? throw new Exception("Order not found");
 
             var orderTotalInCents = (long)Math.Round(order.GetTotal() * 100,
-                MidpointRounding.AwayFromZero);
+            MidpointRounding.AwayFromZero);
 
             if (orderTotalInCents != intent.Amount)
             {
@@ -91,23 +107,9 @@ public class PaymentsController(IPaymentService paymentService,
 
             if (!string.IsNullOrEmpty(connectionId))
             {
-                await hubContext.Clients.Client(connectionId)
-                    .SendAsync("OrderCompleteNotification", order.ToDto());
+                await hubContext.Clients.Client(connectionId).SendAsync("OrderCompleteNotification",
+                    order.ToDto());
             }
-        }
-    }
-
-    private Event ConstructStripeEvent(string json)
-    {
-        try
-        {
-            return EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"],
-                _whSecret);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Failed to construct stripe event");
-            throw new StripeException("Invalid signature");
         }
     }
 }

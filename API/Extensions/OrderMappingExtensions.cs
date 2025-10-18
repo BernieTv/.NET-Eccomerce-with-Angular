@@ -1,4 +1,5 @@
-﻿using API.DTOs;
+using System;
+using API.DTOs;
 using Core.Entities.OrderAggregate;
 
 namespace API.Extensions;
@@ -19,9 +20,9 @@ public static class OrderMappingExtensions
             OrderItems = order.OrderItems.Select(x => x.ToDto()).ToList(),
             Subtotal = order.Subtotal,
             Discount = order.Discount,
-            Total = order.GetTotal(),  
             Status = order.Status.ToString(),
-            PaymentIntentId = order.PaymentIntentId
+            PaymentIntentId = order.PaymentIntentId,
+            Total = order.GetTotal()
         };
     }
 

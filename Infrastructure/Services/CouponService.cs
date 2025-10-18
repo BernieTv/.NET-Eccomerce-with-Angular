@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+using System;
+using Core.Entities;
 using Core.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Stripe;
@@ -11,7 +12,7 @@ public class CouponService : ICouponService
     {
         StripeConfiguration.ApiKey = config["StripeSettings:SecretKey"];
     }
-
+    
     public async Task<AppCoupon?> GetCouponFromPromoCode(string code)
     {
         var promotionService = new PromotionCodeService();

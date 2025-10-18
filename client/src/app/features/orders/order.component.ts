@@ -1,21 +1,20 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { OrderService } from '../../core/services/order.service';
 import { Order } from '../../shared/models/order';
-import { RouterLink } from '@angular/router';
-import { CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-order',
-  standalone: true,
   imports: [
     RouterLink,
-    DatePipe,
-    CurrencyPipe
+    CurrencyPipe,
+    DatePipe
   ],
   templateUrl: './order.component.html',
   styleUrl: './order.component.scss'
 })
-export class OrderComponent implements OnInit {
+export class OrderComponent {
   private orderService = inject(OrderService);
   orders: Order[] = [];
 

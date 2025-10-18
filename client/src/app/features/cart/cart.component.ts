@@ -7,17 +7,15 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
-  standalone: true,
   imports: [CartItemComponent, OrderSummaryComponent, EmptyStateComponent],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })
 export class CartComponent {
-  private router = inject(Router)
+  private router = inject(Router);
   cartService = inject(CartService);
   
   onAction() {
     this.router.navigateByUrl('/shop');
   }
-
 }

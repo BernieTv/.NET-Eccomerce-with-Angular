@@ -7,7 +7,7 @@ import { Order, OrderToCreate } from '../../shared/models/order';
   providedIn: 'root'
 })
 export class OrderService {
-  baseUrl = environment.apiUrl;
+  baseUrl = environment.baseUrl;
   private http = inject(HttpClient);
   orderComplete = false;
 

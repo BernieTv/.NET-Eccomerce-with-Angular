@@ -10,8 +10,8 @@ export interface Order {
     subtotal: number
     discount?: number
     status: string
-    total: number
     paymentIntentId: string
+    total: number;
   }
   
   export interface ShippingAddress {
